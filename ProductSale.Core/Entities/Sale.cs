@@ -1,8 +1,13 @@
-﻿using DeveloperStore.src.Application.Dto;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using ProductSale.Core.dto;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DeveloperStore.src.Domain.entities
+namespace ProductSale.Core.entities
 {
     public class Sale
     {

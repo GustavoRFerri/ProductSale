@@ -1,22 +1,17 @@
-using DeveloperStore.src.Application.service.@interface;
-using DeveloperStore.src.Domain.entities;
-using DeveloperStore.src.infrastructure.repositories;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks; 
+﻿using Microsoft.AspNetCore.Mvc;
+using ProductSale.Application.service.@interface;
+using ProductSale.Core.entities;
 
-namespace DeveloperStore.src.Api.Controllers
+namespace ProductSale.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class SaleProductController : ControllerBase
     {
         private readonly ILogger<SaleProductController> _logger;
-       
-        private  ISearchProductService _searchProductService;
-        private  IDataBaseSale _dataBaseSale; 
+
+        private ISearchProductService _searchProductService;
+        //private IDataBaseSale _dataBaseSale;
         private IQuantityProductService _quantityProductService;
 
         // TO DO TESTS
@@ -26,12 +21,12 @@ namespace DeveloperStore.src.Api.Controllers
 
         //}
 
-        public SaleProductController(ILogger<SaleProductController> logger, IQuantityProductService quantityProductService, ISearchProductService searchProductService, IDataBaseSale dataBaseSale)
+        public SaleProductController(ILogger<SaleProductController> logger, IQuantityProductService quantityProductService, ISearchProductService searchProductService)
         {
             _logger = logger;
             _quantityProductService = quantityProductService;
             _searchProductService = searchProductService;
-            _dataBaseSale = dataBaseSale;
+            //_dataBaseSale = dataBaseSale;
         }
 
         [HttpGet(Name = "GetSale")]
@@ -47,30 +42,34 @@ namespace DeveloperStore.src.Api.Controllers
             ///  TO DO
             ///  Get the quantity all products automatically
             ///  QuantityProductService();
-            ///  
+            ///
 
             _logger.LogInformation("INICIANDO Creating of Sale ");
 
-            Sale valuesSale =  _quantityProductService.CountProduct(products,customer);
-            DataBaseSale _dataBaseSale = new DataBaseSale();
-
-            _dataBaseSale.Input(valuesSale);
-            return CreatedAtAction(nameof(GetSale), new { id = valuesSale._id }, valuesSale);      
+            Sale valuesSale = _quantityProductService.CountProduct(products, customer);
+            
+            return CreatedAtAction(nameof(GetSale), new { id = valuesSale._id }, valuesSale);
         }
-
-        [HttpPut("SaleModifiedDiscount/{id}")]
-        public async Task<IActionResult> SaleModified(string id, decimal disc)
-        {
-            return Ok(await _dataBaseSale.UpDate(id, disc));
-        }
-
 
         [HttpPut("SaleCancell/{id}")]
         public async Task<IActionResult> SaleCancelled(string id)
         {
             // Cancell the product and the values
-            return Ok(await _dataBaseSale.SaleCancelled(id));
+            
+            //return Ok(await _dataBaseSale.SaleCancelled(id));
+            return Ok();
         }
+
+
+        [HttpPut("SaleModifiedDiscount/{id}")]
+        public async Task<IActionResult> SaleModified(string id, decimal disc)
+        {
+           // return Ok(await _dataBaseSale.UpDate(id, disc));
+           return Ok();
+        }
+
+
+      
 
         //[HttpDelete("Delete/{id}")]
         //public void Del(string id)
@@ -80,3 +79,4 @@ namespace DeveloperStore.src.Api.Controllers
 
     }
 }
+
