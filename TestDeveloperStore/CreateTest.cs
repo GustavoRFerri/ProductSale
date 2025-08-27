@@ -13,6 +13,7 @@ namespace TestDeveloperStore
         private readonly Mock<IDiscountService> mockDiscountService = new();
         private readonly Mock<ILogger<QuantityProductService>> mockLogger = new();
         private readonly Mock<IRepositorySale> mockRepositorySale = new();
+        
 
         private readonly QuantityProductService _quantityProductService;
         
@@ -21,8 +22,12 @@ namespace TestDeveloperStore
 
 
         public CreateTest()
-        {
-            _quantityProductService = new QuantityProductService(mockRepositorySale.Object,mockDiscountService.Object,mockLogger.Object);
+        {            
+            _quantityProductService = new QuantityProductService(
+                mockRepositorySale.Object,
+                mockDiscountService.Object,
+                mockLogger.Object
+                );
         }
 
 
@@ -30,6 +35,8 @@ namespace TestDeveloperStore
         [InlineData(7, "Jhon")]
         public async Task Test_Create_Sale_Above_Four_Product(int quantity, string name)
         {
+
+            var dfds = new Mock<IDiscountService>();
             // Given
             for (int i = 0; i < quantity; i++)
             {
@@ -41,24 +48,24 @@ namespace TestDeveloperStore
                 listProduct.Add(Sale);
             }
 
-            // when
+            //when
             //SaleProductController saleProductController = new SaleProductController();
             //decimal discountFourProducts = await saleProductController.SaleCreated(listProduct, name);
 
-            // with Service
+            //with Service
             //DiscountService discountService = new DiscountService();
-            // Sale discountFourProducts = discountService.DiscountAboveFourProducts2(listProduct);
+            //Sale discountFourProducts = discountService.DiscountAboveFourProducts2(listProduct);
 
             // then
-            //Assert.Equal(63, discountFourProducts.Discount);
+            // Assert.Equal(63, discountFourProducts.Discount);
         }
 
-        [Theory]
-        [InlineData(7, "Anna")]
-        public async Task Test_Create_Sale_Between_10_20_More_Product(int quantity, string name)
+        [Theory(DisplayName ="Create new products")]
+        [InlineData("Anna")]
+        public async Task Test_Create_Sale_Between_10_20_More_Product(string name)
         {
             // Given
-            for (int i = 0; i < quantity; i++)
+            for (int i = 0; i < 7; i++)
             {
                 var Sale = new Product
                 {
@@ -68,7 +75,7 @@ namespace TestDeveloperStore
                 listProduct.Add(Sale);
             }
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 3; i++)
             {
                 var Sale = new Product
                 {
@@ -102,19 +109,13 @@ namespace TestDeveloperStore
             //var testeMock = new Mock<IQuantityProductService>();
             //var teste2 = new QuantityProductService(testeMock.Object);
             //SaleProductController saleProductController = new SaleProductController();
-            Sale discountFourProducts = _quantityProductService.CountProduct(listProduct, name);
-
-
 
             // with Service
-            //QuantityProductService quantityProductService = new QuantityProductService();
-            //Sale newSale = quantityProductService.CountProduct(listProduct, name);
-
-            //DiscountService discountService = new DiscountService();
-            //Sale discountFourProducts = discountService.DiscountBeteween_10_20_Products(listProduct);
+            Sale discountFourProducts = _quantityProductService.CountProduct(listProduct, name);           
 
             // then
-            //Assert.Equal(120, discountFourProducts.Discount);
+            Assert.NotNull(discountFourProducts);
+
         }
 
 
