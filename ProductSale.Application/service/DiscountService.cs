@@ -15,14 +15,6 @@ namespace ProductSale.Application.service
 
     public class DiscountService : IDiscountService
     {
-        private decimal discount = 0;
-        private decimal totalValue = 0;
-        public DiscountService()
-        {
-
-        }
-
-
         public decimal ApplyDiscount(int count, decimal eachPrice)
         {
             decimal valueEachDiscount = 0;

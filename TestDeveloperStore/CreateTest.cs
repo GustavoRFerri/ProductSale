@@ -4,6 +4,7 @@ using ProductSale.Application.service;
 using ProductSale.Application.service.@interface;
 using ProductSale.Core.entities;
 using ProductSale.Infrastructure.repositories;
+using System.Text.Json;
 
 namespace TestDeveloperStore
 {
@@ -11,6 +12,7 @@ namespace TestDeveloperStore
     public class CreateTest
     {
         private readonly Mock<IDiscountService> mockDiscountService = new();
+        
         private readonly Mock<ILogger<QuantityProductService>> mockLogger = new();
         private readonly Mock<IRepositorySale> mockRepositorySale = new();
 
@@ -32,6 +34,14 @@ namespace TestDeveloperStore
         [InlineData("Anna")]
         public async Task Test_Create_Sale_Lot_Of_Products(string name)
         {
+
+            var discServiceMock = new Mock<IDiscountService>();
+            discServiceMock.Setup(m => m.ApplyDiscount(It.IsAny<int>(),It.IsAny<decimal>())).Returns((int id, decimal valor) => valor * 0.9m);
+            var repositorySaleMock = new Mock<IRepositorySale>();
+            var loggerMock = new Mock<ILogger<QuantityProductService>>();
+            var qtdProdService = new QuantityProductService(repositorySaleMock.Object, discServiceMock.Object, loggerMock.Object);
+            
+
             // Given
             for (int i = 0; i < 7; i++)
             {
@@ -73,10 +83,12 @@ namespace TestDeveloperStore
                 };
                 listProduct.Add(Sale);
             }
-            // when            
+            // when
+            // 
+            string dd = JsonSerializer.Serialize(listProduct);
 
             // with Service
-            Sale discountProducts = _quantityProductService.CountProduct(listProduct, name);           
+            Sale discountProducts = qtdProdService.CountProduct(listProduct, name);           
 
             // then
             Assert.NotNull(discountProducts);

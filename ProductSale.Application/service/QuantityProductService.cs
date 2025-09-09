@@ -21,9 +21,10 @@ namespace ProductSale.Application.service
 
         public QuantityProductService(IRepositorySale repositorySale, IDiscountService discountService, ILogger<QuantityProductService> logger)
         {
+            _repositorySale = repositorySale;
             _discountService = discountService;
             _logger = logger;
-            _repositorySale = repositorySale;
+            
         }
 
 
