@@ -60,7 +60,7 @@ namespace ProductSale.Application.service
             }
 
            _repositorySale.Input(saleNew);
-            string caminhoArquivo = "E:\\GUSTAVO\\Repository-Git\\DeveloperStore\\produto.json";
+            string caminhoArquivo = "E:\\GUSTAVO\\Repository-Git\\ProductSale\\produto.json";
 
             string json = JsonSerializer.Serialize(saleNew, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(caminhoArquivo, json);
