@@ -1,4 +1,4 @@
-﻿using ProductSale.Application.service.@interface;
+﻿using ProductSale.Application.service;
 using ProductSale.Core.entities;
 using ProductSale.Infrastructure.repositories;
 using System;

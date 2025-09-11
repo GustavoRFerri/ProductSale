@@ -1,5 +1,4 @@
 ﻿using ProductSale.Application.service;
-using ProductSale.Application.service.@interface;
 using ProductSale.Infrastructure.repositories;
 
 namespace ProductSale.API
@@ -16,6 +15,7 @@ namespace ProductSale.API
             builder.Services.AddScoped<IRepositorySale, RepositorySale>();
             builder.Services.AddScoped<ISearchProductService, SearchProductService>();
             builder.Services.AddScoped<IQuantityProductService, QuantityProductService>();
+            builder.Services.AddScoped<IChangeProductService,ChangeProductService>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

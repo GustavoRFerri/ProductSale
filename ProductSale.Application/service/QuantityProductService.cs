@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using ProductSale.Application.service.@interface;
+using ProductSale.Application.service;
 using ProductSale.Core.dto;
 using ProductSale.Core.entities;
 using ProductSale.Infrastructure.repositories;

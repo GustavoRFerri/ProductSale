@@ -1,4 +1,5 @@
-﻿using ProductSale.Application.service.@interface;
+﻿using ProductSale.Application.service;
+using ProductSale.Core.entities;
 using ProductSale.Infrastructure.repositories;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,19 @@ namespace ProductSale.Application.service
 {
     public class ChangeProductService : IChangeProductService
     {
+        private readonly IRepositorySale _repositorySale;
 
-        public void CancelProduct(int id)
+        public ChangeProductService(IRepositorySale repositorySale)
         {
-            RepositorySale _repositorySale = new RepositorySale();
-            _repositorySale.SaleCancelled("id"); // Replace "id" with the actual id of the sale to cancel   
+            _repositorySale = repositorySale;
+        }
+
+
+        public async Task<Sale> CancelProduct(string id)
+        {            
+            Sale sale = await _repositorySale.SaleCancelled(id); // Replace "id" with the actual id of the sale to cancel   
+
+            return sale;
         }
 
 

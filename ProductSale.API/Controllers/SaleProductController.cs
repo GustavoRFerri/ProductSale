@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProductSale.Application.service.@interface;
+using ProductSale.Application.service;
+
 using ProductSale.Core.entities;
 
 namespace ProductSale.API.Controllers
@@ -9,8 +10,11 @@ namespace ProductSale.API.Controllers
     public class SaleProductController : ControllerBase
     {
         private readonly ILogger<SaleProductController> _logger;
+        private readonly IChangeProductService _changeProductService;
+        private readonly IDeleteProductService deleteProductService;
 
         private ISearchProductService _searchProductService;
+
         //private IDataBaseSale _dataBaseSale;
         private IQuantityProductService _quantityProductService;
 
@@ -21,9 +25,10 @@ namespace ProductSale.API.Controllers
 
         //}
 
-        public SaleProductController(ILogger<SaleProductController> logger, IQuantityProductService quantityProductService, ISearchProductService searchProductService)
+        public SaleProductController(ILogger<SaleProductController> logger, IChangeProductService changeProductService, IQuantityProductService quantityProductService, ISearchProductService searchProductService)
         {
             _logger = logger;
+            _changeProductService = changeProductService;
             _quantityProductService = quantityProductService;
             _searchProductService = searchProductService;
             //_dataBaseSale = dataBaseSale;
@@ -38,26 +43,17 @@ namespace ProductSale.API.Controllers
 
         [HttpPost(Name = "CreateSale")]
         public async Task<IActionResult> SaleCreated(List<Product> products, string customer)
-        {
-            ///  TO DO
-            ///  Get the quantity all products automatically
-            ///  QuantityProductService();
-            ///
-
+        {        
             _logger.LogInformation("INICIANDO Creating of Sale ");
-
-            Sale valuesSale = _quantityProductService.CountProduct(products, customer);
-            
+            Sale valuesSale = _quantityProductService.CountProduct(products, customer);            
             return CreatedAtAction(nameof(GetSale), new { id = valuesSale._id }, valuesSale);
         }
 
         [HttpPut("SaleCancell/{id}")]
         public async Task<IActionResult> SaleCancelled(string id)
         {
-            // Cancell the product and the values
-            
-            //return Ok(await _dataBaseSale.SaleCancelled(id));
-            return Ok();
+            // Cancell the product
+            return Ok(await _changeProductService.CancelProduct(id));
         }
 
 
@@ -68,14 +64,11 @@ namespace ProductSale.API.Controllers
            return Ok();
         }
 
-
-      
-
-        //[HttpDelete("Delete/{id}")]
-        //public void Del(string id)
-        //{
-        //    //_dataBaseSale.Delete(id);
-        //}
+        [HttpDelete("Delete/{id}")]
+        public void Del(string id)
+        {
+            //_dataBaseSale.Delete(id);
+        }
 
     }
 }

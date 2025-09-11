@@ -1,4 +1,4 @@
-﻿using ProductSale.Application.service.@interface;
+﻿using ProductSale.Application.service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
