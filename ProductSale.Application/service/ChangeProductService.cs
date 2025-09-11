@@ -12,18 +12,26 @@ namespace ProductSale.Application.service
     public class ChangeProductService : IChangeProductService
     {
         private readonly IRepositorySale _repositorySale;
+        private readonly ISearchProductService _searchProductService;
 
-        public ChangeProductService(IRepositorySale repositorySale)
+        public ChangeProductService(IRepositorySale repositorySale, ISearchProductService searchProductService)
         {
             _repositorySale = repositorySale;
+            _searchProductService = searchProductService;
         }
 
 
         public async Task<Sale> CancelProduct(string id)
-        {            
-            Sale sale = await _repositorySale.SaleCancelled(id); // Replace "id" with the actual id of the sale to cancel   
+        {
+            Sale sl = await _repositorySale.GetIdSale(id);
 
-            return sale;
+            if (sl == null)
+                return null;
+            else
+            {
+                await _repositorySale.SaleCancelled(id);
+                return sl;
+            }            
         }
 
 

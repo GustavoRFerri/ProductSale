@@ -8,19 +8,37 @@ using System.Threading.Tasks;
 
 namespace ProductSale.Application.service
 {
-    internal class DeleteProductService : IDeleteProductService
+    public class DeleteProductService : IDeleteProductService
     {
         private readonly IRepositorySale _repositorySale;
+        private readonly ISearchProductService _searchProductService;
 
 
-        public DeleteProductService( IRepositorySale repositorySale)
+        public DeleteProductService( IRepositorySale repositorySale, ISearchProductService searchProductService)
         {
             _repositorySale = repositorySale;
+            _searchProductService = searchProductService;
         }
 
-        public Task<Sale> DeleteProduct(string id)
+        public async Task<Sale> DeleteProduct(string id)
         {
-            return _repositorySale.Delete(id);
+            try
+            {               
+                Sale sales = await _repositorySale.GetIdSale(id);
+
+                if (sales == null)
+                    return null;
+                else
+                {
+                    await _repositorySale.Delete(id);
+                    return sales;
+                }
+            }
+            catch (Exception x)
+            {
+
+                throw;
+            }
         }
     }
 }

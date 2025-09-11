@@ -11,12 +11,29 @@ namespace ProductSale.Application.service
 {
     public class SearchProductService : ISearchProductService
     {
-        RepositorySale dataSale = new RepositorySale();
+        private readonly IRepositorySale _repositorySale;
+
+        public SearchProductService(IRepositorySale repositorySale)
+        {
+            _repositorySale = repositorySale;             
+        }
+
 
         public async Task<List<Sale>> GetAllSale()
         {
-            List<Sale> sales = await dataSale.GetSale();
+            List<Sale> sales = await _repositorySale.GetSale();
             return sales;
         }
+
+        public async Task<Sale> GetIdSale(string id)
+        {
+            Sale sales = await _repositorySale.GetIdSale(id);
+
+            if (sales is null)            
+                return null;
+            else            
+                return sales;
+        }
+
     }
 }

@@ -10,13 +10,13 @@ namespace TestDeveloperStore
 
     public class CreateTest
     {
-        private readonly Mock<IDiscountService> mockDiscountService = new();
-        
+        private readonly Mock<IDiscountService> mockDiscountService = new();        
         private readonly Mock<ILogger<QuantityProductService>> mockLogger = new();
-        private readonly Mock<IRepositorySale> mockRepositorySale = new();
 
+        private readonly Mock<IRepositorySale> mockRepositorySale = new();
         private readonly QuantityProductService _quantityProductService; 
         List<Product> listProduct = new List<Product>();
+        Cart cart  = new Cart();
 
 
         public CreateTest()
@@ -82,12 +82,14 @@ namespace TestDeveloperStore
                 };
                 listProduct.Add(Sale);
             }
+            cart.ListProducts = listProduct;
+            cart.NameCustomer = name;
             // when
             // 
             string dd = JsonSerializer.Serialize(listProduct);
 
             // with Service
-            Sale discountProducts = qtdProdService.CountProduct(listProduct, name);           
+            Sale discountProducts = qtdProdService.CountProduct(cart);           
 
             // then
             Assert.NotNull(discountProducts);
@@ -109,10 +111,13 @@ namespace TestDeveloperStore
                 };
                 listProduct.Add(sale);
             }
+            cart = new Cart();
+            cart.ListProducts = listProduct;
+            cart.NameCustomer = name;
 
             // when
             // with Service
-            Sale discountProducts = _quantityProductService.CountProduct(listProduct, name);
+            Sale discountProducts = _quantityProductService.CountProduct(cart);
 
             // then
             Assert.NotNull(discountProducts);

@@ -28,29 +28,29 @@ namespace ProductSale.Application.service
         }
 
 
-        public Sale CountProduct(List<Product> products, string name)
+        public Sale CountProduct(Cart cart)
         {
             List<string> kindProd = new List<string>();
-            kindProd.Add(products[0].Kind.ToString());
+            kindProd.Add(cart.ListProducts[0].Kind.ToString());
 
-            for (int j = 0; j < products.Count; j++)
+            for (int j = 0; j < cart.ListProducts.Count; j++)
             {
                 for (int i = 0; i < kindProd.Count; i++)
                 {
-                    if (!kindProd.Contains(products[j].Kind))
+                    if (!kindProd.Contains(cart.ListProducts[j].Kind))
                     {
-                        kindProd.Add(products[j].Kind);
+                        kindProd.Add(cart.ListProducts[j].Kind);
                     }
                 }
             }
 
             // To Calculate Discount
-            List<ProductDTO> nLIst = ToCalculateDiscount(kindProd, products);
+            List<ProductDTO> nLIst = ToCalculateDiscount(kindProd, cart.ListProducts);
 
             // Create the new Sale
             Sale saleNew = new Sale();
             saleNew.ProductDTO = nLIst;
-            saleNew.Customer = name;
+            saleNew.Customer = cart.NameCustomer;
             saleNew.DateTime = DateTime.Now;
 
             foreach (ProductDTO item in nLIst)

@@ -9,6 +9,6 @@ namespace ProductSale.Application.service
 {
     public interface IQuantityProductService
     {
-        Sale CountProduct(List<Product> products, string name);
+        Sale CountProduct(Cart cart);
     }
 }

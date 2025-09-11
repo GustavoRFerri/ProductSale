@@ -10,6 +10,7 @@ namespace ProductSale.Application.service
     public interface ISearchProductService
     {
         Task<List<Sale>> GetAllSale();
+        Task<Sale> GetIdSale(string id);
     }
 
 }

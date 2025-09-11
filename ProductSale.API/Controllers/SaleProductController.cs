@@ -11,9 +11,8 @@ namespace ProductSale.API.Controllers
     {
         private readonly ILogger<SaleProductController> _logger;
         private readonly IChangeProductService _changeProductService;
-        private readonly IDeleteProductService deleteProductService;
-
-        private ISearchProductService _searchProductService;
+        private readonly IDeleteProductService _deleteProductService;
+        private readonly ISearchProductService _searchProductService;
 
         //private IDataBaseSale _dataBaseSale;
         private IQuantityProductService _quantityProductService;
@@ -25,13 +24,22 @@ namespace ProductSale.API.Controllers
 
         //}
 
-        public SaleProductController(ILogger<SaleProductController> logger, IChangeProductService changeProductService, IQuantityProductService quantityProductService, ISearchProductService searchProductService)
+        public SaleProductController(ILogger<SaleProductController> logger, IChangeProductService changeProductService, IDeleteProductService deleteProductService, IQuantityProductService quantityProductService, ISearchProductService searchProductService)
         {
             _logger = logger;
             _changeProductService = changeProductService;
+            _deleteProductService = deleteProductService;
             _quantityProductService = quantityProductService;
             _searchProductService = searchProductService;
             //_dataBaseSale = dataBaseSale;
+        }
+
+        [HttpPost(Name = "CreateSale")]
+        public async Task<IActionResult> SaleCreated([FromBody] Cart cart)
+        {
+            _logger.LogInformation(" Startting creating of Sale ");
+            Sale valuesSale = _quantityProductService.CountProduct(cart);
+            return CreatedAtAction(nameof(GetSale), new { id = valuesSale._id }, valuesSale);
         }
 
         [HttpGet(Name = "GetSale")]
@@ -41,33 +49,41 @@ namespace ProductSale.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost(Name = "CreateSale")]
-        public async Task<IActionResult> SaleCreated(List<Product> products, string customer)
-        {        
-            _logger.LogInformation("INICIANDO Creating of Sale ");
-            Sale valuesSale = _quantityProductService.CountProduct(products, customer);            
-            return CreatedAtAction(nameof(GetSale), new { id = valuesSale._id }, valuesSale);
+
+        [HttpGet("GetIdSale/{id}")]
+        public async Task<IActionResult> GetIdSale(string id)
+        {
+            var result = await _searchProductService.GetIdSale(id);
+
+            if (result is null)            
+                return NotFound(" Product didn´t found ");            
+            else
+                return Ok(result);
         }
+
+      
 
         [HttpPut("SaleCancell/{id}")]
         public async Task<IActionResult> SaleCancelled(string id)
         {
             // Cancell the product
-            return Ok(await _changeProductService.CancelProduct(id));
-        }
+            var sale = await _changeProductService.CancelProduct(id);
 
-
-        [HttpPut("SaleModifiedDiscount/{id}")]
-        public async Task<IActionResult> SaleModified(string id, decimal disc)
-        {
-           // return Ok(await _dataBaseSale.UpDate(id, disc));
-           return Ok();
+             if (sale is null)            
+                return NotFound(" Product didn´t found ");            
+            else            
+                return Ok(sale);
         }
+      
 
         [HttpDelete("Delete/{id}")]
-        public void Del(string id)
+        public async Task<IActionResult> Del(string id)
         {
-            //_dataBaseSale.Delete(id);
+            Sale sl = await _deleteProductService.DeleteProduct(id);
+            if (sl is null)            
+                return NotFound(" Product didn´t found ");            
+            else            
+                return Ok(sl);            
         }
 
     }
